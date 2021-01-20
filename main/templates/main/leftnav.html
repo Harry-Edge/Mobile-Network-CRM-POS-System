@@ -1,0 +1,83 @@
+{% load static %}
+<div class="container navbar-left">
+  <div class="row navbar-left">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse navbar-lefting">
+      <div class="sidebar-sticky pt-2">
+        <ul class="nav flex-column">
+            <div class="container border-bottom"></div>
+            <li class="nav-item"><h7 class="nav-link"> Account Holder: <strong style="text-transform:uppercase">{{customer.first_name}} {{customer.last_name}}</strong> </h7></li>
+            <li class="nav-item"><h7 class="nav-link"> Postcode: <strong> {{customer.postcode}}</strong></h7></li>
+            <li class="nav-item"><h7 class="nav-link"> Address: <strong> {{customer.first_line_address}}</strong></h7></li>
+            <li class="nav-item"><h7 class="nav-link"> Account No: <strong> {{customer.id}}0001234</strong></h7></li>
+            <div class="container border-bottom"></div>
+        </ul>
+        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted"><strong>Product</strong></h6>
+        <ul class="nav flex-column mb-2">
+              <li class="nav-item"><h7 class="nav-link"> CTN: <strong class="text-primary">{{mobile_number.number}}</strong></h7></li>
+              <li class="nav-item"><h7 class="nav-link"> User: <strong>{{mobile_number.user}}</strong></h7></li>
+              <li class="nav-item"><h7 class="nav-link"> Plan: <strong> {{mobile_number.plan}}</strong></h7></li>
+              <li class="nav-item"><h7 class="nav-link"> Device: <strong>{{mobile_number.device}}</strong></h7></li>
+              <li class="nav-item">
+                     {% if mobile_number.insurance is True %}
+                        <h7 class="nav-link"> Insurance: <strong class="text-success">{{mobile_number.insurance_option}}</strong></h7>
+                     {% elif mobile_number.insurance is False %}
+                        <h7 class="nav-link"> Insurance: <strong class="text-danger">None</strong></h7>
+                     {% endif %} </li>
+              <li class="nav-item"><h7 class="nav-link"> Average Bill:<strong class="text-success">£{{mobile_number.average_bill}}</strong></h7></li>
+              <li class="nav-item">
+                    {% if mobile_number.spend_cap == "None" %}
+                        <h7 class="nav-link"> Spend Cap: <strong class="text-danger">None</strong> </h7>
+                    {% elif mobile_number.spend_cap == "0" %}
+                        <h7 class="nav-link"> Spend Cap: <strong class="text-success">£{{mobile_number.spend_cap}}</strong> </h7>
+                    {% else %}
+                        <h7 class="nav-link"> Spend Cap: <strong class="text-warning">£{{mobile_number.spend_cap}}</strong> </h7>
+                    {% endif %}</li>
+        </ul>
+        <div class="container border-bottom"></div>
+        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted"><strong>Usage</strong></h6>
+        <ul class="nav flex-column mb-2">
+           <li class="nav-item"><h7 class="nav-link"> Data 3m: <strong>{{mobile_number.data_usage_3m}} GB</strong></h7></li>
+           <li class="nav-item"><h7 class="nav-link"> Data Gifted <strong>{{mobile_number.data_gifted_3m}} GB</strong></h7></li>
+           <li class="nav-item"><h7 class="nav-link"> Text 3m : <strong>{{mobile_number.texts_sent_3m}} Sent</strong></h7></li>
+           <li class="nav-item"><h7 class="nav-link"> Voice: <strong>{{mobile_number.call_mins}} Mins</strong></h7></li>
+           <li class="nav-item"><h7 class="nav-link"> MMS: <strong>{{mobile_number.mms_sent}} Sent</strong></h7></li>
+        </ul>
+        <div class="container border-bottom"></div>
+        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted"><strong>Eligibility</strong></h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item"><h7 class="nav-link"> Contract Start: <strong>{{mobile_number.contract_start}}</strong></h7></li>
+          <li class="nav-item"><h7 class="nav-link"> Upgrade Date: <strong>{{date_cal.calculate_upgrade_date}}</strong></h7></li>
+                {% if date_cal.calculate_if_eligible is False %}
+                  <li class="nav-item"><h7 class="nav-link"> Days Remaining: <strong class="text-danger"> {{date_cal.calculate_days_remaining}}</strong></h7></li>
+                {% elif date_cal.calculate_if_eligible is True %}
+                    <li class="nav-item"><h7 class="nav-link"> Days Remaining: <strong class="text-success"> Eligible Now </strong></h7></li>
+                {% endif %}
+          <li class="nav-item"><h7 class="nav-link"> Contract Length: <strong>{{mobile_number.contract_length_months}} Months</strong></h7></li>
+          <li class="nav-item">
+                  {% if date_cal.calculate_early_upgrade_fee == 0  %}
+                    <h7 class="nav-link">Early Upgrade Fee: <strong class="text-success">£{{date_cal.calculate_early_upgrade_fee}}</strong></h7>
+                  {% elif date_cal.calculate_early_upgrade_fee <= 150  %}
+                    <h7 class="nav-link">Early Upgrade Fee: <strong class="text-warning">£{{date_cal.calculate_early_upgrade_fee}}</strong></h7>
+                  {% elif date_cal.calculate_early_upgrade_fee >= 150  %}
+                    <h7 class="nav-link">Early Upgrade Fee: <strong class="text-danger">£{{date_cal.calculate_early_upgrade_fee}}</strong></h7>
+                  {% endif %}</li>
+        </ul>
+        <div class="container border-bottom"></div>
+        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted"><strong>Discount</strong></h6>
+        <ul class="nav flex-column mb-2">
+           <li class="nav-item">
+                {% if mobile_number.friends_and_family is True %}
+                    <h7 class="nav-link"> Friends and Family: <strong class="text-success">Yes</strong></h7>
+                {% elif mobile_number.friends_and_family is False %}
+                    <h7 class="nav-link"> Friends and Family: <strong class="text-danger">No</strong></h7>
+                {% endif %}
+            <li class="nav-item">
+                {% if mobile_number.perk is True %}
+                    <h7 class="nav-link"> Perk: <strong class="text-success">Yes</strong></h7>
+                {% elif mobile_number.perk is False %}
+                    <h7 class="nav-link"> Perk: <strong class="text-danger">No</strong></h7>
+                {% endif %}</ul>
+      </div>
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,169 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block content %}
+        <div class="container col-md-12" >
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+                    <h3 class="text-info"> &nbsp Handset Upgrade - <strong class="text-secondary">{{mobile_number.number}}</strong></h3>
+                </div>
+                <a href="{% url 'dashboard' mobile_number.number %}"><button type="submit" class="btn btn-dark mb-md-1 pt-1 "> Return To Dashbord </button> </a>
+            </div>
+        </div>
+        {% include 'main/householdview.html' %}
+        <div class="container-fluid ">
+             <div class="col-md-8">
+                  <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                    <div class="col p-0 d-flex flex-column position-relative">
+                        <div class="container mb-2 md-0 border-bottom"></div>
+                                <div class="container-fluid">
+                                    <h5 class="border-bottom pt-1 text-secondary"> <strong>Save Tools </strong></h5>
+                                        {% if mobile_number.friends_and_family is True %}
+                                            <div class="container-fluid bg-light pt-4">
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <h6 class=""> <strong class="text-secondary "> Friends and Family - 30% </strong>&nbsp <button name="add_f_and_f" class="btn btn-outline-info btn-sm py-0">Add</button></h6>
+                                                </form>
+                                                <br>
+                                            </div>
+                                        {% endif %}
+                                        <div class="container-fluid bg-light">
+                                            <form  class="form-inline" method="POST">
+                                                {% csrf_token %}
+                                                    <h6><strong class="text-secondary"> Handset Credit:  </strong></h6>
+                                                    <div class="form-group mx-sm-3 mb-2">
+                                                        <select class="custom-select mr-3 md-2" id="inlineFormCustomSelect" name="handset_credit">
+                                                            <option selected>Choose...</option>
+                                                            <option value="10">£10</option>
+                                                            <option value="20">£20</option>
+                                                            <option value="30">£30</option>
+                                                            <option value="40">£40</option>
+                                                            <option value="50">£50</option>
+                                                            <option value="60">£60</option>
+                                                            <option value="70">£70</option>
+                                                            <option value="80">£80</option>
+                                                            <option value="90">£90</option>
+                                                            <option value="100">£100</option>
+                                                            <option value="110">£110</option>
+                                                            <option value="120">£120</option>
+                                                        </select>
+                                                        <button name="add_handset_credit" class="btn btn-outline-info btn-sm py-0">Add</button>
+
+                                                         {% if messages %}
+                                                            {% for message in messages %}
+                                                                 {% if message == 'Invalid option, Please choose a valid amount' %}
+                                                                     <script>
+                                                                        alert("{{message}}");
+                                                                     </script>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                            </form>
+                                       </div>
+                                       {% if mobile_number.friends_and_family is False %}
+                                            <br>
+                                            <br>
+                                            <br>
+                                            <br>
+                                       {% endif %}
+                                       {% if date_cal.calculate_days_remaining <= 100 and date_cal.calculate_if_eligible is False %}
+                                            <div class="bg-light pt-3">
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <h6 class=""> <strong class="text-secondary "> 100 Day Early Upgrade Fee - £0 </strong>&nbsp <button name="100_day_early" class="btn btn-outline-info btn-sm py-0">Add</button></h6>
+                                                </form>
+                                                <br>
+                                            </div>
+                                       {% elif date_cal.calculate_days_remaining > 100 and date_cal.calculate_if_eligible is False %}
+                                           <br>
+                                           <br>
+                                           <br>
+                                           <br>
+                                       {% endif %}
+                                </div>
+                                {% if date_cal.calculate_if_eligible is True  %}
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                {% endif %}
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                        </div>
+                    </div>
+                  </div>
+             </div>
+        </div>
+        <br>
+        {% include 'main/basket.html' %}
+        <div class="container-fluid">
+                <div class="col-md-8">
+                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                        <div class="col p-0 d-flex flex-column position-relative">
+                            <div class="container mb-2 md-0 border-bottom"></div>
+                            <div class="container pt-2">
+                                {% get_individual_colour_stock order.handset as stock %}
+                                <h6><strong>Handset:</strong> {{order.handset.model}} {{order.handset.storage}}GB {{order.handset.colour}} &nbsp; &nbsp; &nbsp; &nbsp;
+                                    {% if stock >= 1 %}
+                                        <strong>Stock:</strong> <strong class="text-success">{{stock}}</strong>
+                                     {% elif stock == 0 %}
+                                        <strong>Stock:</strong> <strong class="text-danger"> Expect Delivery Within 7 Days </strong>
+                                    {% endif %}
+                                </h6>
+                            </div>
+                            <div class="col-md-12 pt-2" style="height:450px;overflow:auto;">
+                                <table class="table">
+                                      <thead class="thead-light">
+                                          <tr>
+                                              <th scope="col">Plan</th>
+                                              <th scope="col">Contract Length</th>
+                                              <th scope="col">Data</th>
+                                              <th scope="col">Value</th>
+                                              <th scope="col">
+                                                  <form method="POST">
+                                                     {% csrf_token %}
+                                                     <input type="submit" name="sort_by_mrc" value="MRC" >
+                                                  </form>
+                                              </th>
+                                              <th scope="col">Upfront</th>
+                                              <th scope="col">Select</th>
+                                          </tr>
+                                      </thead>
+                                      <div>
+                                        {% for tariff in handset_tariffs %}
+                                            <tr>
+                                                {% get_upfront tariff.mrc order.handset.model tariff.data_allowance as upfront %}
+                                                {% calculate_value tariff.mrc tariff.contract_length order.handset as value %}
+                                                <td>{{tariff.plan_name}}</td>
+                                                <td>{{tariff.contract_length}} Months</td>
+                                                <td>{{tariff.data_allowance}}GB</td>
+                                                {% if value >= 1000 %}
+                                                    <td class="text-success">£{{value}}0</td>
+                                                {% elif value > 400 and value < 1000 %}
+                                                    <td class="text-warning">£{{value}}0</td>
+                                                {% elif value <= 400 %}
+                                                    <td class="text-danger">£{{value}}0</td>
+                                                {% endif %}
+                                                <td><strong>£{{tariff.mrc}}pm</strong></td>
+                                                <td><strong>£{{ upfront }}</strong></td>
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <td><button type="submit" name="select" class="btn btn-sm btn-info"> Select</button>
+                                                        <input type="hidden" name="tariff_code" value="{{tariff.tariff_code}}">
+                                                        <input type="hidden" name="tariff_upfront" value="{{upfront}}">
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                        {% endfor %}
+                                      </div>
+                                </table>
+                            </div>
+                        </div>
+                      </div>
+                </div>
+        </div>
+{% endblock %}

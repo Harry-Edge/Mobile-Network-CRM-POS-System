@@ -1,0 +1,91 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+        <div class="container col-md-12" >
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+                    <h3 class="text-info"> &nbsp Sim-Only Upgrade - <strong class="text-secondary">{{mobile_number.number}}</strong></h3>
+                </div>
+                <a href="{% url 'dashboard' mobile_number.number %}"><button type="submit" class="btn btn-dark mb-md-1 pt-1 "> Return To Dashbord</button></a>
+            </div>
+        </div>
+        {% include 'main/householdview.html' %}
+        <!-- SIM ONLY DASHBOARD-->
+        <div class="container-fluid ">
+             <br>
+             <div class="col-md-8">
+                  <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm h-md-250 position-relative">
+                    <div class="col p-3 d-flex flex-column position-relative">
+                        <h3 class="mb-2"> <strong class="text-muted "> Annoucements</strong> </h3>
+                        <div class="container "></div>
+                        <p class="mb-auto text-secondary "> - 100GB for £20</p>
+                        <p class="mb-auto text-secondary "> - 20GB FOR £15 </p>
+                    </div>
+                  </div>
+             </div>
+             <br>
+             <div class="container-fluid">
+                   <form method="POST">
+                       {% csrf_token %}
+                       <div class="form-group">
+                           <button name="24" class="btn btn-outline-info btn-lg mb-3 col-md-3" > 24 Month </button>
+                           <button name="18"  class="btn btn-outline-info btn-lg mb-3 col-md-3"> 18 Month </button>
+                           <button name="smart"  class="btn btn-outline-info btn-lg mb-3"> <strong> Smart </strong></button>
+                       </div>
+                       <div class="form-group">
+                             <button name="12" class="btn btn-outline-info btn-lg mb-3 col-md-3" > 12 Month </button>
+                             <button name="1"  class="btn btn-outline-info btn-lg mb-3 col-md-3"> 1 Month </button>
+                             <button name="r"  class="btn btn-outline-warning btn-lg mb-3"> <strong>RESET</strong> </button>
+                       </div>
+                   </form>
+             </div>
+        </div>
+        <!-- END OF SIM ONLY DASHBOARD -->
+        <br>
+        {% include 'main/basket.html' %}
+        <!-- SIM ONLY Tariff Table -->
+        <div class="container-fluid">
+            <div class="col-md-8">
+                  <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                        <div class="container-fluid">
+                            <div style="height:510px;overflow:auto;">
+                                <table class="table" >
+                                    <thead class="thead-light">
+                                        <tr>
+                                          <th scope="col">Plan</th>
+                                          <th scope="col">Contract Length</th>
+                                          <th scope="col">Data</th>
+                                          <th scope="col">Value</th>
+                                          <th scope="col">MRC</th>
+                                          <th scope="col">Select</th>
+                                        </tr>
+                                    </thead>
+                                    {% for sim in sim_only_tariffs %}
+                                     <tr>
+                                        {% calculate_value sim.mrc sim.contract_length 0 as value %}
+                                        <td>{{sim.plan_name}}</td>
+                                        <td>{{sim.contract_length}} Months</td>
+                                        <td>{{sim.data_allowance}}GB</td>
+                                                {% if value >= 400 %}
+                                                    <td class="text-success">£{{value}}</td>
+                                                {% elif value > 250 and value < 400 %}
+                                                    <td class="text-warning">£{{value}}</td>
+                                                {% elif value <= 250 %}
+                                                    <td class="text-danger">£{{value}}</td>
+                                                {% endif %}
+                                        <td>£{{sim.mrc}}pm</td>
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <td><button type="submit" name="select" class="btn btn-sm btn-info"> Select</button></td>
+                                            <input type="hidden" name="mrc" value=" {{sim.tariff_code}}">
+                                        </form>
+                                     </tr>
+                                     {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                  </div>
+            </div>
+        </div>
+{% endblock %}

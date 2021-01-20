@@ -1,0 +1,85 @@
+{% load static %}
+{% load tags %}
+<div class="col">
+     <div class="btn btn-default float-right">
+            <div class="col-md-30">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm h-md-2 position-relative">
+                     <div class="col p-4 mb-0 position-static">
+                          <h4 class="mb-0">
+                               <svg width="2em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                   <path d="M6.5 10.995V14.5a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5V11c0-.25-.25-.5-.5-.5H7c-.25 0-.5.25-.5.495z"/><path fill-rule="evenodd" d="M13 2.5V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                               </svg><strong>   &nbsp  &nbsp  &nbsp  &nbsp  &nbsp  &nbsp  &nbsp  &nbsp  &nbsp Household  &nbsp  &nbsp &nbsp &nbsp </strong>
+                          </h4>
+                          <br>
+                          <nav>
+                              <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-overview-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Overview</a>
+                                <a class="nav-item nav-link" id="nav-lines-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">CTNs</a>
+                                <a class="nav-item nav-link" id="nav-hbb-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">HBB</a>
+                              </div>
+                          </nav>
+                            <div class="tab-content" id="nav-tabContent">
+                                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                        <br>
+                                        <ul class="nav flex-column mb-1">
+                                              <li class="nav-item"><a class="float-left" > No of CTN: <strong class="text-primary"> {{total_lines}} </strong></a></li>
+                                              <li class="nav-item">
+                                                  {% if customer.credit_class <= 3 %}
+                                                    <a class="float-left"> Credit Class: <strong class="text-danger"> {{customer.credit_class}} </strong> </a>
+                                                  {% elif customer.credit_class >= 6 %}
+                                                    <a class="float-left"> Credit Class: <strong class="text-success"> {{customer.credit_class}} </strong> </a>
+                                                  {% elif customer.credit_class >= 4 %}
+                                                    <a class="float-left"> Credit Class: <strong class="text-warning"> {{customer.credit_class}} </strong> </a>
+                                                  {% endif %}</li>
+                                              <li class="nav-item">
+                                                {% if customer.add_lines_available == '0' %}
+                                                    <a class="float-left"> Add Line: <strong class="text-danger"> {{customer.add_lines_available}} </strong> </a>
+                                                {% elif customer.add_lines_available >= '3' %}
+                                                    <a class="float-left"> Add Line: <strong class="text-success"> {{customer.add_lines_available}} </strong> </a>
+                                                {% elif customer.add_lines_available >= '1'  %}
+                                                    <a class="float-left"> Add Line: <strong class="text-warning"> {{customer.add_lines_available}} </strong> </a>
+                                                {% endif %}</li>
+                                              <li class="nav-item"><a class="float-left"> 5G Area: <strong class="text-success"> Yes </strong></a></li>
+                                              <li class="nav-item"><a class="float-left"> Customer Tenure: <strong> {{customer.date_tenure}} </strong></a></li>
+                                        </ul>
+                                  </div>
+                                  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                        <br>
+                                        <ul class="nav flex-column mb-1">
+                                              <table class="table-condensed table-borderless">
+                                                 <thead>
+                                                     <tr>
+                                                         <td scope="col"> <Strong>CTN: &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp  </Strong></td>
+                                                         <td scope="col float-left"> <strong> User &nbsp &nbsp &nbsp &nbsp  </strong> </td>
+                                                         <td scope="col float-right"> <strong> Upgrade</strong> </td>
+                                                     </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                     {% for ctn in customer.mobilenumber_set.all %}
+                                                        <tr>
+                                                            <td><a href="{% url 'dashboard' ctn.number %}">{{ctn.number}}</a></td>
+                                                            <td>{{ctn.user}} &nbsp &nbsp </td>
+                                                            {% calculate_if_number_is_eligible ctn as customer_number %}
+                                                            {% if customer_number is True%}
+                                                                <td class="text-success">{{ctn.upgrade_date}}</td>
+                                                            {% else %}
+                                                                <td class="text-danger">{{ctn.upgrade_date}}</td>
+                                                            {% endif %}
+                                                        </tr>
+                                                     {% endfor %}
+                                              </table>
+                                        </ul>
+                                  </div>
+                                  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                  <br>
+                                  <ul class="nav flex-column mb-1">
+                                      <li class="nav-item"><a class="float-left"> HBB: <strong class="text-danger"> No </strong></a></li>
+                                      <li class="nav-item"><a class="float-left"> Customer Tenure: <strong> {{customer.date_tenure}}</strong></a></li>
+                                  </ul>
+                            </div>
+                          </div>
+                     </div>
+                </div>
+            </div>
+         </div>
+    </div>

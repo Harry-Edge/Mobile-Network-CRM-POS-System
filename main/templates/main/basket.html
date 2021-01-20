@@ -1,0 +1,148 @@
+{% load static %}
+{% load tags %}
+<div class="container-fluid ">
+     <div class="btn btn-default float-right">
+            <div class="col-md-40">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm h-md- position-relative">
+                     <div class="col p-4 d-flex flex-column position-static">
+                          <h4 class="mb-3 float-left">
+                              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-basket" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                              </svg><strong>&nbsp Deal Builder</strong>
+                          </h4>
+                          <table class="table-condensed table-striped table-borderless">
+                             <thead>
+                                 <tr>
+                                     <td scope="col"> <Strong>Description &nbsp &nbsp &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp </Strong></td>
+                                     <td scope="col"> <strong> One-Off  &nbsp &nbsp &nbsp </strong></td>
+                                     <td scope="col"> <strong>Monthly </strong></td>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                <tr>
+                                    {% if order.contract_length is not None %}
+                                    <td class="float-left">Contract EE {{order.contract_length}}m </td>
+                                    <td>£0.00 </td>
+                                    <td>£0.00</td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    {% if order.contract_type is not None%}
+                                    <td class="float-left">{{order.contract_type}}</td>
+                                    <td>£0.00 </td>
+                                    <td>£0.00</td>
+                                    {% endif %}
+                                </tr>
+                                {% if order.early_upgrade_fee > 0 %}
+                                    <tr>
+                                    <td class="float-left"> Early Upgrade Fee </td>
+                                    <td> £{{order.early_upgrade_fee}}0</td>
+                                    <td> £0.00 </td>
+                                    </tr>
+                                {% endif %}
+                                 {% if order.one_hundred_day_promo is True %}
+                                    <tr>
+                                    <td class="float-left"> 100 Day Early Promo </td>
+                                    <td> £0.00</td>
+                                    <td> £0.00 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.annual_upgrade_fee > 0 %}
+                                    <tr>
+                                    <td class="float-left"> Annual Upgrade Fee </td>
+                                    <td> £1000 </td>
+                                    <td> £0.00 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.tariff is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.tariff.plan_name}} {{order.tariff.data_allowance}}GB </td>
+                                    <td> £{{order.tariff.upfront}}0</td>
+                                    <td> £{{order.tariff.mrc}}0 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.handset is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.handset.model}}</td>
+                                    <td> £{{order.upfront}}0</td>
+                                    <td> £{{order.handset.mrc}}0 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.handset_tariff is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.handset_tariff.plan_name}} </td>
+                                    <td> £{{order.handset_tariff.upfront}}0</td>
+                                    <td> £{{order.handset_tariff.mrc}}0 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.friends_and_family is True %}
+                                    <tr>
+                                    <td class="float-left"> Friends and Family </td>
+                                    <td> £0.00</td>
+                                    {% if order.tariff is not None %}
+                                        <td> £-{% calculate_f_and_f_discount_amount order.tariff.mrc %}0</td>
+                                    {% else %}
+                                        <td> £-{% calculate_f_and_f_discount_amount order.handset_tariff.mrc %}0</td>
+                                    {% endif %}
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.handset_credit > 0 %}
+                                    <tr>
+                                    <td class="float-left"> Handset Credit £{{order.handset_credit}} </td>
+                                    <td> £-{{order.handset_credit}}.00</td>
+                                    <td> £0.00 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.existing_insurance is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.existing_insurance.insurance_name}} </td>
+                                    <td> £{{order.existing_insurance.upfront}}.00</td>
+                                    <td> £{{order.existing_insurance.mrc}}0 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.insurance is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.insurance.insurance_name}} </td>
+                                    <td> £{{order.insurance.upfront}}.00</td>
+                                    <td> £{{order.insurance.mrc}}0 </td>
+                                    </tr>
+                                 {% endif %}
+                                 {% if order.cap is not None %}
+                                    <tr>
+                                    <td class="float-left"> {{order.cap.cap_name}} </td>
+                                    <td> £{{order.cap.upfront}}.00</td>
+                                    <td> £{{order.cap.mrc}}.00 </td>
+                                    </tr>
+                                 {% endif %}
+                                 <tr>
+                                    <td class="float-left"> <strong>TOTAL:</strong></td>
+                                     <td> <strong> £{{basket_total.get_total_upfront}}0</strong> </td>
+                                     {% if order is None %}
+                                        <td> <strong> £0.00</strong> </td>
+                                     {% else %}
+                                         <td> <strong> £{{basket_total.get_total_mrc}}0</strong></td>
+                                     {% endif %}
+                                 </tr>
+                             </tbody>
+                          </table>
+                          <div class="container border-bottom"></div>
+                          <br>
+                          <div class="form-group">
+                          {% if order.handset is not None %}
+                              <a href="{% url 'deletecart' pk=mobile_number.number option=2 %}"><button type="submit" class="btn btn-danger float-left btn-sm" > Discard Deal</button> </a>
+                          {% elif order.tariff is not None %}
+                              <a href="{% url 'deletecart' pk=mobile_number.number option=1 %}"><button type="submit" class="btn btn-danger float-left btn-sm" > Discard Deal</button> </a>
+                          {% endif %}
+                          {% if order.tariff is not None %}
+                             <a href="{% url 'finalisesimup' mobile_number.number %}"><button type="submit"  class="btn btn-success float-right btn-sm"> Finalise Sim </button> </a>
+                          {% elif order.handset is not None and order.handset_tariff is None %}
+                             <a href="{% url 'choosehandsettariff' mobile_number.number %}"><button type="submit"  class="btn btn-success float-right btn-sm"> Continue Building </button> </a>
+                          {% elif order.handset_tariff is not None %}
+                             <a href="{% url 'finalisehandsetup' mobile_number.number %}"><button type="submit"  class="btn btn-success float-right btn-sm"> Finalise Order </button> </a>
+                          {% endif %}
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</div>

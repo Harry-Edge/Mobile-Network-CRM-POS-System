@@ -1,0 +1,50 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+        <div class="container col-md-12">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+                    <h3 class="text-info"> &nbsp DashBoard - Consumer </h3>
+                </div>
+            </div>
+            <div class="col">
+                {% include 'main/householdview.html' %}
+                <div class="col-md-6">
+                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-relative">
+                          <h3 class="mb-1"> <strong class="text-muted"> Handset Upgrade</strong></h3>
+                          <div class="container border-bottom"></div>
+                          <br>
+                            {% if date_cal.calculate_if_eligible is True %}
+                                <a href="{% url 'buildhandsetupgrade' mobile_number.number %}"> Upgrade </a>
+                            {% elif date_cal.calculate_if_eligible is False %}
+                                <a href="{% url 'buildhandsetupgrade' mobile_number.number %}"> Early Upgrade  </a>
+                            {% endif %}
+                            {% if date_cal.calculate_days_remaining <= 100 and date_cal.calculate_if_eligible is False %}
+                                <h7><strong>100 Day Promo Eligible</strong> </h7>
+                            {% endif %}
+                            {% if mobile_number.annual_upgrade is True and date_cal.calculate_if_eligible is False %}
+                                 <a href="{% url 'buildhandsetupgrade' mobile_number.number %}" > Annual Upgrade </a>
+                            {% endif %}
+                        </div>
+                      </div>
+                </div>
+                 <div class="col-md-6">
+                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-relative">
+                          <h3 class="mb-1"> <strong class="text-muted">Sim-Only Upgrade </strong></h3>
+                          <div class="container border-bottom "></div>
+                          <br>
+                            {% if date_cal.calculate_if_eligible is False %}
+                                <p class="mb-auto">Available On: <strong class="text-danger">{{date_cal.calculate_upgrade_date}}</strong> </p>
+                            {% elif date_cal.calculate_if_eligible is True %}
+                                <p class="mb-auto">Available On: <strong class="text-success"> Eligible Now</strong> </p>
+                                <a href="{% url 'buildsimoupgrade' mobile_number.number %}"> Upgrade </a>
+                            {% endif %}
+                        </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+{% endblock %}

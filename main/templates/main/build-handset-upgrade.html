@@ -1,0 +1,112 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+      <div class="container col-md-12" >
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+                    <h3 class="text-info"> &nbsp Handset Upgrade - <strong class="text-secondary">{{mobile_number.number}}</strong> </h3>
+                </div>
+                <a href="{% url 'dashboard' mobile_number.number %}"><button type="submit" class="btn btn-dark mb-md-1 pt-1 "> Return To Dashbord </button></a>
+            </div>
+      </div>
+      {% include 'main/householdview.html' %}
+      <br>
+      <div class="container-fluid pt-0">
+          <div class="col-md-8">
+              <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm h-md-250 position-relative">
+                    <div class="col p-3 d-flex flex-column position-relative bg-light">
+                        <h3 class="mb-2 border-bottom"> <strong class="text-muted "> Annoucements </strong></h3>
+                        <p class="mb-auto text-secondary "> - <strong>New Release:</strong>  Pear Phone 12 Pro Max and Mini</p>
+                        <p class="mb-auto text-secondary "> - <strong>Coming Soon:</strong> Soulsung S21 </p>
+                    </div>
+              </div>
+          </div>
+          <div class="container-fluid pt-4 mb-0">
+             <form method="POST">
+                   {% csrf_token %}
+                   <div class="form-group ">
+                       <button name="pear" class="btn btn-outline-secondary btn-lg mb-3 col-md-3" > Pear </button>
+                       <button name="soulsung"  class="btn btn-outline-secondary btn-lg mb-3 col-md-3"> Soulsung </button>
+                       <button name="r"  class="btn btn-outline-warning btn-lg col-md-1 mb-3"> <strong>RESET</strong> </button>
+                   </div>
+             </form>
+          </div>
+      </div>
+      <div class="container-fluid ">
+          <div class="container-fluid border-bottom float-left col-8"></div>
+          <br>
+          <form method="POST">
+             {% csrf_token %}
+              <div class="input-group col-8 ">
+                    <input type="text" class="form-control " name="handset_search" placeholder="Search Handset...">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit" >
+                        <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+              </div>
+          </form>
+          <br>
+      </div>
+     {% include 'main/basket.html' %}
+     <div class="container-fluid">
+        <div class="col-md-8">
+              <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                <div class="col p-0 d-flex flex-column position-relative">
+                    <div class="container mb-2 md-0 border-bottom"></div>
+                    <div class="col-md-12 pt-2" style="height:430px;overflow:auto;">
+                        <table class="table" >
+                          <thead class="thead-light">
+                            <tr>
+                              <th scope="col">Brand</th>
+                              <th scope="col">Device</th>
+                              <th scope="col">Storage</th>
+                              <th scope="col">Speed</th>
+                              <th scope="col">Stock</th>
+                              <th scope="col">Colour</th>
+                            </tr>
+                          </thead>
+                          <div>
+                              {% for handset in handsets %}
+                                 <tr>
+                                    {% get_total_stock handset as total_stock %}
+                                    <td>{{handset.manufacture}}</td>
+                                    <td>{{handset.model}}</td>
+                                    <td>{{handset.storage}}GB</td>
+                                    <td>{{handset.speed_type}}</td>
+                                    {% if total_stock == 0 %}
+                                        <td class="text-danger">{{total_stock}}</td>
+                                    {% elif total_stock >= 1 and total_stock < 3 %}
+                                        <td class="text-warning">{{total_stock}}</td>
+                                    {% elif total_stock >= 4 %}
+                                        <td class="text-success">{{total_stock}}</td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="btn-group">
+                                              <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Select Colour
+                                              </button>
+                                              <div class="dropdown-menu">
+                                                  {% filter_colours handset.model as filter %}
+                                                          {% for item in filter %}
+                                                                {% get_individual_colour_stock item as stock %}
+                                                                <form method="POST">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="handset_choice" value="{{item.product_code}}">
+                                                                     <input class="dropdown-item " width="10" type="submit" value="{{item.colour}}  -  {{stock}}" >
+                                                                </form>
+                                                          {% endfor %}
+                                              </div>
+                                        </div>
+                                    </td>
+                                 </tr>
+                              {% endfor %}
+                          </div>
+                        </table>
+                    </div>
+                </div>
+              </div>
+        </div>
+     </div>
+{% endblock %}

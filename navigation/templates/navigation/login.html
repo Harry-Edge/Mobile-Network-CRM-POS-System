@@ -1,0 +1,41 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title> Sign In </title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
+
+  </head>
+  <body class="text-center">
+      <form class="form-signin" method="POST" action="">
+        {% csrf_token%}
+        <br>
+        <br>
+        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="bi bi-phone-fill" viewBox="0 0 16 16">
+            <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
+        </svg>
+        <br>
+        <br>
+
+         {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+         {% endif %}
+          <h1 class="h3 mb-3 font-weight-normal"><strong>Sign in </strong> </h1>
+          <input type="text" name="employeeid" class="form-control" placeholder="Employee ID" required autofocus>
+          <input type="password" name="password" class="form-control" placeholder="Password" required>
+          <button class="btn btn-lg btn-secondary btn-block" type="submit">Sign in</button>
+          <p class="mt-3 mb-3 text-muted">&copy; Mobile Network Provider - Limited</p>
+      </form>
+</body>
+</html>

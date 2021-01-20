@@ -1,0 +1,25 @@
+{% load static %}
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <span class="navbar-brand col-md-3 col-lg-2 mr-0 px-4 navbar-lefting"><strong>Upgrade Customer</strong></span>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+            <input style="width:850px; height:50px" class="form-control form-control-dark" type="text" name="number" placeholder="Enter New Customer ID" aria-label="Search">
+             <div class="input-group-append">
+                      <button class="btn btn-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                      </button>
+             </div>
+        </div>
+    </form>
+    <div class="px-4 mr-1">
+        <a class="btn btn-secondary" href="{% url 'menu' %}"> Menu</a>
+    </div>
+     {% if messages %}
+            {% for message in messages %}
+                     <script>
+                        alert("{{ message }}");
+                    </script>
+            {% endfor %}
+    {% endif %}
+</nav>

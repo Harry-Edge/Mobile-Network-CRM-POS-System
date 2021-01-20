@@ -1,0 +1,204 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+        <div class="container col-md-12" >
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+                    <h3 class="text-info"> &nbsp Sim-Only Upgrade - <strong class="text-secondary">{{mobile_number.number}}</strong></h3>
+                </div>
+                <a href="{% url 'dashboard' mobile_number.number %}"><button type="submit" class="btn btn-dark mb-md-1 pt-1 "> Return To Dashbord </button></a>
+            </div>
+        </div>
+        {% include 'main/householdview.html' %}
+        <!-- SIM ONLY DASHBOARD-->
+        <div class="container-fluid">
+             <div class="col-md-8">
+                  <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                        <div class="col p-0 d-flex flex-column position-relative">
+                            <div class="container mb-2 md-0 border-bottom"></div>
+                                <div class="container-fluid">
+                                    <h5 class="border-bottom pt-1 text-secondary"> <strong>Add Ons </strong></h5>
+                                    <div class="container row">
+                                        <div class="col bg-light pt-2">
+                                            <h5><strong> Spend Caps </strong></h5>
+                                            <div class="container">
+                                                 <form  class="form-inline" method="POST">
+                                                    {% csrf_token %}
+                                                    <h6><strong class="text-secondary"> Add Cap: </strong></h6>
+                                                 <div class="form-group mx-sm-3 mb-2">
+                                                      <select class="custom-select mr-3 md-2" id="inlineFormCustomSelecta" name="cap_selected">
+                                                        <option selected>Choose...</option>
+                                                          {% for cap in spend_caps %}
+                                                            <option value="{{cap.cap_code}}">{{cap.cap_name}}</option>
+                                                          {% endfor %}
+                                                      </select>
+                                                      <button class="btn btn-outline-info py-0">Add</button>
+                                                 </div>
+                                                 {% for message in messages %}
+                                                    {% if message == 'Invalid option, Please choose a valid amount' %}
+                                                        <script>
+                                                            alert("{{ message }}")
+                                                        </script>
+                                                    {% endif %}
+                                                 {% endfor %}
+                                                 </form>
+                                            </div>
+                                        </div>
+                                        {% if mobile_number.insurance is True %}
+                                         <div class="col bg-light pt-2">
+                                            <h5> <strong> Insurance </strong></h5>
+                                            <div class="container">
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                     <h6><strong class="text-secondary">Roll Over Insurance</strong>&nbsp <button  name="keep-insurance" class="btn btn-outline-info btn-sm py-0">Add</button></h6>
+                                                     <h6><strong class="text-secondary">Discontinue  Insurance</strong>&nbsp <button  name="cancel-insurance" class="btn btn-outline-info btn-sm py-0">Add</button></h6>
+                                                </form>
+                                            </div>
+                                            {% else %}
+                                                <div class="col">
+                                                    <div id="divCheckbox" style="display: none;">
+                                                </div>
+                                             {% endif %}
+                                            <br>
+                                    </div>
+                                    {% if mobile_number.friends_and_family is True %}
+                                    <div class="container pt-3">
+                                        <h5><strong> Discounts </strong></h5>
+                                        <div class="container">
+                                            <form method="POST">
+                                            {% csrf_token %}
+                                            <h6 class="text-secondary"> Friends and Family <button name="add_f_and_f" class="btn btn-outline-info btn-sm py-0">Add</button></h6>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                         <div class="container">
+                                             <br>
+                                             <br>
+                                             <br>
+                                             <br>
+                                             <br>
+                                         </div>
+                                    {% endif %}
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                  </div>
+             </div>
+        </div>
+        <br>
+        {% include 'main/basket.html' %}
+        <div class="container-fluid">
+            <div class="col-md-8">
+                  <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-0 shadow-sm h-md-250 position-relative">
+                        <div class="col p-0 d-flex flex-column position-relative">
+                            <div class="container mb-2 md-0 border-bottom"></div>
+                            <div class="container">
+                                <h4 class="border-bottom mt-2 mb-2"> <strong>Customer Validation </strong> </h4>
+                                <br>
+                                <div class="container">
+                                    <div class="container">
+                                        <div class="row">
+                                            <form class="form-inline" method="POST">
+                                                {% csrf_token %}
+                                                <h6><strong>Postcode: </strong></h6>
+                                                <div class="form-group mx-sm-3 mb-2">
+                                                    <input type="text" class="form-control" name="postcode" id="inputpostcode" placeholder="eg. 1AA">
+                                                </div>
+                                                <button type="submit" class="btn btn-info mb-2">Confirm identity</button>
+                                            </form>
+                                            {% if order.postcode_validated == True %}
+                                                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-check text-success" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/></svg>
+                                            {% elif order.postcode_validated == False %}
+                                                <svg width="4em" height="3em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>
+                                            {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            <form  class="form-inline" method="POST">
+                                                {% csrf_token %}
+                                                 <h6><strong> Month of Birth: </strong> </h6>
+                                                 <div class="form-group mx-sm-4 mb-2">
+                                                  <select class="custom-select mr-4 md-4" name="month">
+                                                    <option selected>Choose...</option>
+                                                    <option value="01">January</option>
+                                                    <option value="02">February</option>
+                                                    <option value="03">March</option>
+                                                    <option value="04">April</option>
+                                                    <option value="05">May</option>
+                                                    <option value="06">June</option>
+                                                    <option value="07">July</option>
+                                                    <option value="08">August</option>
+                                                    <option value="09">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                  </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                            </form>
+                                            {% if order.mob_validated == True %}
+                                                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-check text-success" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/></svg>
+                                            {% elif order.mob_validated == False %}
+                                                <svg width="4em" height="3em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>
+                                            {% endif %}
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <form class="form-inline" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" name="sendpin" class="btn btn-success mb-2">Send OTP Pin</button>
+                                            </form>
+                                            <form class="form-inline" method="POST">
+                                                {% csrf_token %}
+                                                  <div class="form-group mx-sm-3 mb-2">
+                                                    <input type="text" class="form-control" name="inputpin" id="inputpin" placeholder="eg. 1AA">
+                                                  </div>
+                                                  <button type="submit" class="btn btn-info mb-2">Confirm Pin</button>
+                                            </form>
+                                            {% if order.otp_validated == True %}
+                                                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-check text-success" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/></svg>
+                                            {% elif order.otp_validated == False %}
+                                                <svg width="4em" height="3em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <br>
+                                <h4 class="mt-3 mb-2"> <strong class="bo">&nbsp &nbsp Confirm Order</strong> </h4>
+                                <br>
+                                <div class="container btn-toolbar">
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="send_contract">
+                                        <button class="btn btn-outline-info btn-lg mr-5" > Send Contract Information</button>
+                                    </form>
+                                    <form method="POST">
+                                        {% csrf_token%}
+                                        <a href="{% url 'dashboard' mobile_number.number %}"><button class="btn btn-dark btn-lg" name="submit_connection"> Submit Connection</button> </a>
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                {% if message == 'Order criteria for submission has not been met!!' %}
+                                                     <script>
+                                                        alert("{{ message }}");
+                                                    </script>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </form>
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                  </div>
+            </div>
+        </div>
+        </div>
+{% endblock %}
