@@ -324,7 +324,7 @@ def finalise_handset_upgrade(request, pk):
     if "send_contract" in request.POST:
         twillo_functions.send_handset_order_information(cus_order)
 
-    # Checks if all mandatory items has been added to bast and 'submits' the connection
+    # Checks if all mandatory items has been added to basket and 'submits' the connection
     if 'submit_connection' in request.POST:
         if process_upgrade.validate_order_for_submission(cus_order, 'handset') is True:
             return redirect('/upgrade/dashboard/' + pk)

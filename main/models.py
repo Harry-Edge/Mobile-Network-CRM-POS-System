@@ -11,7 +11,7 @@ class Employee(models.Model):
     employee_number = models.CharField(max_length=7, null=True)
 
     def __str__(self):
-        return self.last_name + ", " + self.first_name
+        return f"{self.last_name} {self.first_name}"
 
 class Customer(models.Model):
     ADD_LINE_OPTIONS = [('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4')]
@@ -28,7 +28,8 @@ class Customer(models.Model):
     add_lines_available = models.CharField(max_length=200, null=True, choices=ADD_LINE_OPTIONS)
 
     def __str__(self):
-        return self.last_name + ", " + self.first_name
+
+        return f"{self.last_name} {self.first_name}"
 
 class Insurance(models.Model):
 
@@ -45,6 +46,7 @@ class Insurance(models.Model):
     ins_code = models.CharField(max_length=100, null=True)
 
     def __str__(self):
+
         return self.insurance_name
 
 
@@ -83,7 +85,6 @@ class MobileNumber(models.Model):
     """Eligibility"""
     contract_start = models.DateField()
     contract_end = models.DateField(null=True)
-    upgrade_date = models.DateField()
     contract_length_months = models.CharField(max_length=10, null=True, choices=CONTRACT_LENGTH)
     early_upgrade_fee = models.FloatField(null=True)
 
@@ -92,7 +93,8 @@ class MobileNumber(models.Model):
     perk = models.BooleanField(null=True)
 
     def __str__(self):
-        return self.number + str("- \t\t" + str(self.customer))
+
+        return f"{self.number} {self.customer}"
 
 class HandsetTariffs(models.Model):
 
@@ -111,7 +113,7 @@ class HandsetTariffs(models.Model):
     tariff_code = models.CharField(max_length=100, null=True)
 
     def __str__(self):
-        return self.plan_name + str("\t\t" + str("\t") + str("\t") + str("£") + str(self.mrc) + str('pm \t \t--- \t') + str(self.tariff_code))
+        return f"{self.plan_name} £{self.mrc} -- {self.tariff_code}"
 
     class Meta:
         verbose_name_plural = "Handset Tariffs"
@@ -143,7 +145,8 @@ class Handsets(models.Model):
 
 
     def __str__(self):
-        return self.manufacture + "\t" + self.model + "\t" + str(self.storage) + "\t" + self.colour
+
+        return f"{self.manufacture} {self.model} {self.storage} {self.colour}"
 
 
 class SimOnlyTariffs(models.Model):
@@ -151,7 +154,7 @@ class SimOnlyTariffs(models.Model):
     CONTRACT_LENGTH = [('1', '1'), ('12', '12'), ('18', '18'), ('24', '24')]
 
     DATA_ALLOWANCE = [('0.25', '0.25'), ('1', '1'), ('3', '3'), ('20', '20'), ('60', '60'), ('100', '100'),
-                      ('200', '200'), ('10000', '10000')]
+                      ('200', '200'), ('1000', '1000')]
 
     PLAN_TYPE = [('Standard', 'Standard')]
 
@@ -169,8 +172,7 @@ class SimOnlyTariffs(models.Model):
 
     def __str__(self):
 
-        return self.plan_name + str("\t\t" + str(self.data_allowance) + str("GB") + str("\t") +
-                            str(self.contract_length) + str("m\t") + str("£") + str(self.mrc) + str('pm'))
+        return f"{self.plan_name} {self.data_allowance}GB {self.contract_length} £{self.mrc}pm"
 
 class SpendCaps(models.Model):
 
@@ -213,7 +215,7 @@ class SimOnlyOrder(models.Model):
     date_ordered = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.cus) + str(self.tariff)
+        return f"{self.cus} {self.tariff}"
 
 class HandsetOrder(models.Model):
 
@@ -253,7 +255,8 @@ class HandsetStock(models.Model):
     imei = models.CharField(max_length=15, null=True)
 
     def __str__(self):
-        return str(self.handset) + str("\t ") + str(self.imei)
+
+        return f"{self.handset} {self.imei}"
 
     class Meta:
         verbose_name_plural = "Handset Stock"
