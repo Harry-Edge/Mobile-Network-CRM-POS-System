@@ -30,7 +30,7 @@ Once you have done that, you can then start creating 'Handsets'. Both the fields
 Once all the above has been done you should be able to start building upgrade options. If you wish to use the one-time pin and other SMS features, make sure 'account_sid' and 'auth_token' in the 'twilio_functions.py' file reflects your criteria, along with the 'from_number'.
 
 ## Handset Upgrade
-![](/sampleimages/HandsetUpgrade".jpeg?raw=true "Handset Upgrade")
+![](/sampleimages/HandsetUpgrade.jpeg?raw=true "Handset Upgrade")
 
 ## Handset Tariffs
 ![](/sampleimages/HandsetTariffs.jpeg?raw=true "Handset Tariffs")
