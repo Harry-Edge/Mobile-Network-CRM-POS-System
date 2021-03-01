@@ -11,7 +11,7 @@
             <div class="col">
                 {% include 'main/householdview.html' %}
                 <div class="col-md-6">
-                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-relative">
                           <h3 class="mb-1"> <strong class="text-muted"> Handset Upgrade</strong></h3>
                           <div class="container border-bottom"></div>
@@ -31,7 +31,7 @@
                       </div>
                 </div>
                  <div class="col-md-6">
-                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-relative">
                           <h3 class="mb-1"> <strong class="text-muted">Sim-Only Upgrade </strong></h3>
                           <div class="container border-bottom "></div>
@@ -44,7 +44,80 @@
                             {% endif %}
                         </div>
                       </div>
-                  </div>
-            </div>
+                 </div>
+                 <br>
+                 <br>
+                 <div class="col-md-12">
+                     <div class="row no-gutters border rounded overflow-hidden shadow position-relative" >
+                         <div class="col p-4 d-flex flex-column position-relative">
+                             <h3 class="md-1"><strong class="text-muted">Recommendations for </strong><strong>{{customer.first_name}}</strong></h3>
+                             <div class="container border-bottom "></div>
+                             <br>
+                             <div class="container-fluid">
+                                 <div class="row">
+                                     {% for handset in handsets %}
+                                         <div class="col-md-4 border rounded shadow">
+                                               <div class="container-fluid">
+                                                 <br>
+                                                 <div class="container border-bottom "></div>
+                                                 <br>
+                                                 <div class="container">
+                                                  <p><strong>Handset: </strong> {{handset.model}}</p>
+                                                  {% return_tariff_object tariffs forloop.counter0 as tariff %}
+                                                  <p><strong>Data: </strong> {{tariff.data_allowance}} GB</p>
+                                                  <p><strong>Monthly:</strong> £{{tariff.mrc}}</p>
+                                                  {% get_upfront tariff.mrc handset.model tariff.data_allowance as upfront %}
+                                                  <p><strong>Upfront:</strong> £{{upfront}}</p>
+                                                   <div class="col-md-12">
+                                                              <button class="btn col-md-12 btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                Select Colour
+                                                              </button>
+                                                              <div class="dropdown-menu">
+                                                                  {% filter_colours handset.model as filter %}
+                                                                          {% for item in filter %}
+                                                                                {% get_individual_colour_stock item as stock %}
+                                                                                <form method="POST">
+                                                                                    {% csrf_token %}
+                                                                                    <input type="hidden" name="handset_choice" value="{{item.product_code}}">
+                                                                                    <input type="hidden" name="tariff_code" value="{{tariff.tariff_code}}">
+                                                                                    <input type="hidden" name="upfront" value="{{upfront}}">
+                                                                                     <input class="dropdown-item " width="20" type="submit" value="{{item.colour}}  -  {{stock}}" >
+                                                                                </form>
+                                                                          {% endfor %}
+                                                              </div>
+                                                      </div>
+                                                  </div>
+                                                  <hr>
+                                              </div>
+                                         </div>
+                                     {% endfor %}
+                                 </div>
+                                 <br>
+                                 <div class="row">
+                                      {% for recommended_sim_tariffs in recommended_sim_tariffs %}
+                                      <div class="col-md-4 border rounded shadow">
+                                          <div class="container-fluid">
+                                              <br>
+                                              <div class="container border-bottom "></div>
+                                              <br>
+                                              <p><strong>Sim-Only Type:</strong> {{recommended_sim_tariffs.plan_name}}</p>
+                                              <p><strong>Contract Length:</strong> {{recommended_sim_tariffs.contract_length}}</p>
+                                              <p><strong>Data: </strong> {{recommended_sim_tariffs.data_allowance}}GB</p>
+                                              <p><strong>Monthly:</strong> £{{recommended_sim_tariffs.mrc}}</p>
+                                              <form method="POST">
+                                                 {% csrf_token %}
+                                                <input type="hidden" name="simo_recommended" value="{{recommended_sim_tariffs.tariff_code}}">
+                                                <button  type="submit" class="btn btn-success btn-sm col-md-12">Add To Basket</button>
+                                              </form>
+                                              <hr>
+                                          </div>
+                                      </div>
+                                      {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
         </div>
 {% endblock %}

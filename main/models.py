@@ -60,12 +60,15 @@ class MobileNumber(models.Model):
 
     CONTRACT_LENGTH = [('1', '1'), ('12', '12'), ('18', '18'), ('24', '24')]
 
+    CONTRACT_TYPE = [('Handset', 'Handset'), ('Simo', 'Simo')]
+
     customer = models.ForeignKey(Customer, null=True, on_delete=models.CASCADE)
 
     user = models.CharField(max_length=11, null=True)
 
     """PRODUCTS"""
     number = models.CharField(max_length=11, null=True)
+    contract_type = models.CharField(choices=CONTRACT_TYPE, null=True, max_length=10)
     plan = models.CharField(max_length=100, null=True)
     mrc = models.FloatField(null=True)
     device = models.CharField(max_length=100, null=True)

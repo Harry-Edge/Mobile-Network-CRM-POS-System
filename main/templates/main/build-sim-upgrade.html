@@ -78,7 +78,7 @@
                                         <form method="POST">
                                             {% csrf_token %}
                                             <td><button type="submit" name="select" class="btn btn-sm btn-info"> Select</button></td>
-                                            <input type="hidden" name="mrc" value=" {{sim.tariff_code}}">
+                                            <input type="hidden" name="mrc" value="{{sim.tariff_code}}">
                                         </form>
                                      </tr>
                                      {% endfor %}

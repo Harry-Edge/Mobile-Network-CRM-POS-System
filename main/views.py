@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
+from .recommendations import get_handset_recommendations, get_simo_recommendations
 from . import process_upgrade
 from . import date_calculations
 from . import twillo_functions
@@ -27,8 +28,35 @@ def dashboard(request, pk):
     mobile_number, customer, total_lines = process_upgrade.get_account(pk)
     date_cal = date_calculations.DateTimeCalculations(mobile_number)
 
+    """ Recommendations Panel """
+    recommended_sim_tariffs = get_simo_recommendations(mobile_number)
+    handset_tariffs_recommended, handsets = get_handset_recommendations(mobile_number)
+
+    simo_recommended_choice = request.POST.get('simo_recommended')
+    if simo_recommended_choice:
+        # Adds the recommended simo only tariff to the basket and redirects to finalisation
+        process_upgrade.add_tariff_to_basket(simo_recommended_choice, customer, mobile_number.number)
+
+        return redirect('finalisesimup', pk=mobile_number.number)
+
+    handset_recommended_choice = request.POST.get('handset_choice')
+    if handset_recommended_choice:
+        # Adds the recommended handset tariff to the basket and redirects to finalisation
+        process_upgrade.add_handset_to_basket(handset_recommended_choice, customer, mobile_number.number)
+        process_upgrade.add_handset_tariff_to_basket(request.POST.get('tariff_code'),
+                                                     process_upgrade.get_user_pending_order(customer, 'handset'),
+                                                     request.POST.get('upfront'))
+
+        existing_order = process_upgrade.get_user_pending_order(customer, 'handset')
+        # Adds early upgrade fee to the basket if applicable
+        if date_cal.calculate_early_upgrade_fee() != 0:
+            process_upgrade.add_early_upgrade_fee_to_basket(existing_order, date_cal.calculate_early_upgrade_fee())
+
+        return redirect('finalisehandsetup', pk=mobile_number.number)
+
     context = {'customer': customer, 'mobile_number': mobile_number, "employee": employee, "total_lines": total_lines,
-               'date_cal': date_cal}
+               'date_cal': date_cal, 'recommended_sim_tariffs': recommended_sim_tariffs, 'handsets': handsets,
+               'tariffs': handset_tariffs_recommended}
 
     return render(request, 'main/dashboard.html', context)
 
@@ -66,7 +94,7 @@ def build_sim_only_upgrade(request, pk):
     # Check if a tariff has been selected and processes
     tariff_selected = request.POST.get('mrc')
     if tariff_selected is not None and process_upgrade.get_user_pending_order(customer, 'sim') is None:
-        process_upgrade.add_to_tariff_to_basket(tariff_selected, customer, pk)
+        process_upgrade.add_tariff_to_basket(tariff_selected, customer, pk)
 
     # Gets a current existing order and basket if there is one and current basket totals
     existing_order = process_upgrade.get_user_pending_order(customer, 'sim')

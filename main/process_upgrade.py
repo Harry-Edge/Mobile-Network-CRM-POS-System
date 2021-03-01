@@ -127,10 +127,8 @@ def get_user_pending_order(customer, order_type):
 
 
 # Add Items to Basket
-def add_to_tariff_to_basket(tariff_selected, customer, ctn):
-    """SPELLING ISSUE """
+def add_tariff_to_basket(tariff_selected, customer, ctn):
 
-    tariff_selected = tariff_selected[1:]
     tariff_object = SimOnlyTariffs.objects.get(tariff_code=tariff_selected)
 
     customer_order, status = SimOnlyOrder.objects.get_or_create(cus=customer, is_ordered=False)

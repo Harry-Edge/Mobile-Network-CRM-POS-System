@@ -28,9 +28,6 @@ def get_upfront(mrc, model, data_allowance):
         reader = csv.DictReader(open(location))
 
         for tariffs in reader:
-            print(tariffs['Handset'])
-            print(handset.upper())
-
             if tariffs['Handset'] == handset.upper():
                 return tariffs[mrc]
 
@@ -106,3 +103,11 @@ def calculate_if_number_is_eligible(ctn):
     calculate = date_calculations.DateTimeCalculations(ctn)
 
     return calculate.calculate_if_eligible()
+
+
+@register.simple_tag
+def return_tariff_object(tariffs, index):
+    try:
+        return tariffs[index]
+    except Exception:
+        return None
