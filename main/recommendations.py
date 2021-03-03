@@ -5,7 +5,7 @@ from .date_calculations import DateTimeCalculations
 
 def get_handset_recommendations(mobile_number):
 
-    """ This will return 2 list of handsets/tariffs that are recommended depending on the how much
+    """ This will return 2 lists of handsets/tariffs that are recommended depending on the how much
         data the mobile number uses, and their current handset manufacture """
 
     handset_tariffs_recommended = []
@@ -58,10 +58,12 @@ def get_handset_recommendations(mobile_number):
                 return_recommendation_tariff(device, 1000)
             elif mobile_number.data_usage_3m >= 10:
                 return_recommendation_tariff(device, 100)
+            elif mobile_number.data_usage_3m < 10:
+                return_recommendation_tariff(device, 10)
 
-    if 'iPhone' in mobile_number.device or 'Pear' in mobile_number.device:
+    if 'Pear' in mobile_number.device or 'iPhone' in mobile_number.device:
         get_recommendations('Pear')
-    elif 'Samsung' in mobile_number.device or 'Galaxy' in mobile_number.device:
+    elif 'Soulsung' in mobile_number.device:
         get_recommendations('Soulsung')
 
     return handset_tariffs_recommended, handsets_recommended
@@ -102,6 +104,3 @@ def get_simo_recommendations(mobile_number):
             return get_sim_tariff_recommendations(10)
         else:
             return get_sim_tariff_recommendations(10)
-
-
-

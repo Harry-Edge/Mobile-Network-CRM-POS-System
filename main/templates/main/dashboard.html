@@ -47,12 +47,22 @@
                  </div>
                  <br>
                  <br>
+
                  <div class="col-md-12">
                      <div class="row no-gutters border rounded overflow-hidden shadow position-relative" >
                          <div class="col p-4 d-flex flex-column position-relative">
                              <h3 class="md-1"><strong class="text-muted">Recommendations for </strong><strong>{{customer.first_name}}</strong></h3>
                              <div class="container border-bottom "></div>
                              <br>
+                             <div class="container">
+                                 {% if mobile_number.data_usage_3m >= 50 %}
+                                    <p>Current data usage is high at: <strong class="text-danger">{{mobile_number.data_usage_3m}} GB</strong></p>
+                                 {% elif mobile_number.data_usage_3m < 10 %}
+                                    <p>Current data usage is low at only: <strong class="text-primary">{{mobile_number.data_usage_3m}} GB</strong></p>
+                                 {% elif mobile_number.data_usage_3m < 50 %}
+                                    <p>Current data usage is not to high at: <strong class="text-muted">{{mobile_number.data_usage_3m}}GB</strong></p>
+                                 {% endif %}
+                             </div>
                              <div class="container-fluid">
                                  <div class="row">
                                      {% for handset in handsets %}
@@ -64,7 +74,11 @@
                                                  <div class="container">
                                                   <p><strong>Handset: </strong> {{handset.model}}</p>
                                                   {% return_tariff_object tariffs forloop.counter0 as tariff %}
-                                                  <p><strong>Data: </strong> {{tariff.data_allowance}} GB</p>
+                                                  {% if tariff.data_allowance == '1000' %}
+                                                     <p><strong>Data: </strong> ULTD GB</p>
+                                                  {% else %}
+                                                      <p><strong>Data: </strong> {{tariff.data_allowance}} GB</p>
+                                                  {% endif %}
                                                   <p><strong>Monthly:</strong> £{{tariff.mrc}}</p>
                                                   {% get_upfront tariff.mrc handset.model tariff.data_allowance as upfront %}
                                                   <p><strong>Upfront:</strong> £{{upfront}}</p>
@@ -102,7 +116,13 @@
                                               <br>
                                               <p><strong>Sim-Only Type:</strong> {{recommended_sim_tariffs.plan_name}}</p>
                                               <p><strong>Contract Length:</strong> {{recommended_sim_tariffs.contract_length}}</p>
-                                              <p><strong>Data: </strong> {{recommended_sim_tariffs.data_allowance}}GB</p>
+
+                                              {% if tariff.data_allowance == 1000 %}
+                                                 <p><strong>Data: </strong> ULTD GB</p>
+                                              {% else %}
+                                                  <p><strong>Data: </strong> {{recommended_sim_tariffs.data_allowance}}GB</p>
+                                              {% endif %}
+
                                               <p><strong>Monthly:</strong> £{{recommended_sim_tariffs.mrc}}</p>
                                               <form method="POST">
                                                  {% csrf_token %}
@@ -118,6 +138,7 @@
                          </div>
                      </div>
                  </div>
+
              </div>
         </div>
 {% endblock %}
