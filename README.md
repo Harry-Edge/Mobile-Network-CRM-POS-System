@@ -28,7 +28,7 @@ Next, you will need to create the tariffs for both handsets and sim-only. Spend 
 
 Once you have done that, you can then start creating 'Handsets'. Both the fields of 'Mrc' and upfront should be left as 0. Then make sure you select all the tariffs and insurance options available for the device. Upfront costs for the tariffs depending on the device are contained in the folder 'tariff_and_upfront_prices' in the root directory. There is already some sample handset tariffs and upfront cost there. Just made sure in the tag.py file that line 26 reflects the directory where you store it. After that, all the prices will auto-populate as long as a handset object of the same device has been created, and the tariff was made available to the device on the admin page. 
 
-(A way to create/credit check a customer is coming in a future update along with a mock database meaning the above will no longer be needed to be performed)
+### A way to create/credit check a customer is coming in a future update along with a mock database meaning the above will no longer be needed to be performed
 
 Once all the above has been done you should be able to start building upgrade options. If you wish to use the one-time pin and other SMS features, make sure 'account_sid' and 'auth_token' in the 'twilio_functions.py' file reflects your criteria, along with the 'from_number'.
 
