@@ -3,14 +3,16 @@ Allows employees to upgrade a customer to a new handset or sim tariff.
 
 ## General info
 This is a mock CRM system that in theory would be used by a mobile network provider to retain and upgrade existing customers to a new plan. The system will let you build both sim-only and full handset contracts, after a tariff has been selected optional extras can also be added. Once the deal has been built, the customer needs then to confirm 3 separate validations to confirm their identity. After that, the connection can then be 'submitted'. Although nothing will change on the database, the user will just be redirected back to the dashboard. 
+On the dashboard, the system will also dynamically recommend handset/sim-only products based on their current device and data usage. 
 
-Build with Python, Django, HTML, CSS, Twilo, Javascript, Bootstrap.
+Build with Python, Django, HTML, CSS, Twilio, Javascript, Bootstrap.
 
 ## Dashboard
 ![](/sampleimages/Dashboard.jpeg?raw=true "Dashboard")
 
 ## Features
 	- Customer can have multiple mobile numbers on one account
+    - Dynamic recommendations 
 	- Can add insurance/spend caps/upfront cost discount/friends and family discount
 	- Ability for numbers to be early upgraded depending on the fee 
 	- Detailed customer view of usage and current products
